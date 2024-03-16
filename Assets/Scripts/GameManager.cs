@@ -7,6 +7,7 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     //FOR PLAYER
+    #region pVT vARIABLES
     [SerializeField]
     private PlayerMovement ps;
     [SerializeField]
@@ -18,6 +19,13 @@ public class GameManager : MonoBehaviour
     private TMP_Text buttonText;
     private GameObject targetObject;
 
+    #endregion
+
+    //FOR ENEMY
+    #region Pvt Vars
+    [SerializeField]
+    private EnemyAI[] _aI;
+    #endregion
     void Start()
     {
         ps = FindObjectOfType<PlayerMovement>();
@@ -41,9 +49,13 @@ public class GameManager : MonoBehaviour
         if (cS.gameOver)
         {
             ps.speed = 0f;
+            foreach(EnemyAI ai in _aI)
+            {
+                ai.speed = 0.0f;
+            }
         }
     }
-
+    #region Public Funcs for Player
     public void OnButtonClick(Button button)
     {
         buttonText = button.GetComponentInChildren<TMP_Text>();
@@ -92,5 +104,32 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region Public Funcs for Enemy
+    public void GetSpeedForEnemy(string enemyType)
+    {
+        foreach (EnemyAI ai in _aI)
+        {
+            switch (enemyType)
+            {
+                case "Car":
+                    ai.speed = 20.0f;
+                    break;
+                case "Plane":
+                    ai.speed = 40.0f;
+                    break;
+                case "IceCream":
+                    ai.speed = 5.0f;
+                    break;
+                case "Player":
+                    ai.speed = 10.0f;
+                    break;
+                default:
+                    Debug.LogError("Invalid player type: " + enemyType);
+                    break;
+            }
+        }
+    }
+    #endregion
 }
