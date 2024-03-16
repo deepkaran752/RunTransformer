@@ -6,7 +6,6 @@ public class CamerFollow : MonoBehaviour
 {
     [SerializeField]
     private GameObject player;
-
     private Vector3 offset;
 
     // Start is called before the first frame update

@@ -5,47 +5,40 @@ using System;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public bool start = false;
+    public GameObject currentActive;
+    public float speed = 10f;
 
-    #region Private Variables
-    private GameObject player;
-    private Rigidbody player_rb;
-    private Animator playerAnimator;
+    public GameManager _gM;
+    private int childCount;
+    
 
-    [SerializeField]
-    private float speed = 10f;
-    #endregion
-
-    void Awake()
-    {
-        player = gameObject;
-        player_rb = player.GetComponent<Rigidbody>();
-        playerAnimator = player.GetComponent<Animator>();
-    }
     void Start()
     {
-        StartCoroutine(WaitForAnimation());
+        childCount = gameObject.transform.childCount;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (start)
-            Move();
-    }
-    
-    void Move()
-    {
-        player_rb.transform.Translate(speed * Time.deltaTime * Vector3.forward);
+        currentActive = CurrentActive();
+        Move(speed);
     }
 
-    private IEnumerator WaitForAnimation()
+    public GameObject CurrentActive()
     {
-        
-        yield return new WaitForSeconds(playerAnimator.GetCurrentAnimatorStateInfo(0).length);  //the current animation playing. (cheering anim here).
-        //animation complete after this;
+        for(int i=0; i<childCount; i++)
+        {
+            GameObject child = gameObject.transform.GetChild(i).gameObject;
+            if (child.activeInHierarchy)
+            {
+                return child;
+            }
+        }
 
-        start = true;
-        playerAnimator.SetBool("Cheering_over", start);
+        return null;
+    }
+
+    public void Move(float speed)
+    {
+        transform.Translate(speed * Time.deltaTime * Vector3.forward);
     }
 }
