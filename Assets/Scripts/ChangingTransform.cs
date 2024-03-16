@@ -14,13 +14,12 @@ public class ChangingTransform : MonoBehaviour
     private Coroutine[] transitionCoroutines;
     #endregion
     #region Public vars
-    public string currentOBJName = "";
+    private string currentOBJName = "Player";
     #endregion
     // Start is called before the first frame update
     #region UnitydefinedFunctions
     void Start()
     {
-        currentOBJName = "Player";
         _gM.GetSpeedForEnemy(currentOBJName);
     }
 
@@ -33,8 +32,6 @@ public class ChangingTransform : MonoBehaviour
     #region Private Functions
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("AI"))
-        {
             if (other.CompareTag("AI"))
             {
                 // Initialize the transition coroutine array
@@ -46,7 +43,6 @@ public class ChangingTransform : MonoBehaviour
                     transitionCoroutines[i] = StartCoroutine(PerformTransition(enemyAIs[i]));
                 }
             }
-        }
 
     }
 
@@ -70,15 +66,24 @@ public class ChangingTransform : MonoBehaviour
             }
         }
 
-        if (activeChild != null && targetChild != null)
+        if (targetChild != null)
         {
-            yield return new WaitForSeconds(1.0f);
-
-            // Deactivate
-            activeChild.SetActive(false);
-
-            // Activate
             currentOBJName = targetChild.name;
+            _gM.GetSpeedForEnemy(currentOBJName);
+        }
+
+        // Wait for a brief delay
+        yield return new WaitForSeconds(1.0f);
+
+        // Deactivate active child
+        if (activeChild != null)
+        {
+            activeChild.SetActive(false);
+        }
+
+        // Activate target child
+        if (targetChild != null)
+        {
             targetChild.SetActive(true);
         }
     }

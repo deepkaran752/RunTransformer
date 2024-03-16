@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
         {
             GetSpeed(targetObject.name);
         }
-
+        
         if (cS.gameOver)
         {
             ps.speed = 0f;
